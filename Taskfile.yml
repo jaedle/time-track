@@ -1,0 +1,10 @@
+version: '3'
+
+silent: true
+
+tasks:
+  world:
+    cmds: [ echo 'hello world' ]
+
+  default:
+    cmds: [ task: world ]
