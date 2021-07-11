@@ -5,7 +5,7 @@ silent: true
 tasks:
   install:
     desc: install dependencies
-    cmds: [ task: install-tools, task: install-ui ]
+    cmds: [ task: install-tools, task: install-ui, task: install-reverse-proxy ]
 
   install-tools:
     desc: install required tools
