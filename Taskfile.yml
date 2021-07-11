@@ -15,8 +15,14 @@ tasks:
   world:
     desc: run all validation steps
     cmds:
+      - task: assert-validate-preconditions
       - task: lint
       - task: test
+
+  assert-validate-preconditions:
+    desc: require validation preconditions
+    dir: build/
+    cmds: [ ./validate-preconditions.sh ]
 
   lint:
     desc: lint project
