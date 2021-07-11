@@ -2,7 +2,7 @@
 
 set -eu -o pipefail
 
-COMMANDS='curl node npm screen lsof'
+COMMANDS='curl lsof mktemp node npm screen'
 NODE_VERSION='v14.'
 
 die() {

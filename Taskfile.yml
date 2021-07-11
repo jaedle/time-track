@@ -8,9 +8,8 @@ tasks:
     cmds: [ task: install-ui ]
 
   install-ui:
-    desc: lint ui
-    dir: ui/
-    cmds: [ npm ci ]
+    desc: install ui
+    cmds: [ build/run.sh 'install-ui' ui/ npm run lint ]
 
   world:
     desc: run all validation steps
@@ -22,8 +21,7 @@ tasks:
 
   assert-validate-preconditions:
     desc: require validation preconditions
-    dir: build/
-    cmds: [ ./validate-preconditions.sh ]
+    cmds: [ build/run.sh 'validate-preconditions' build/ ./validate-preconditions.sh ]
 
   format:
     desc: format source-code
@@ -31,8 +29,7 @@ tasks:
 
   format-ui:
     desc: format ui
-    dir: ui/
-    cmds: [ npm run format ]
+    cmds: [ build/run.sh 'format-ui' ui/ npm run format ]
 
   lint:
     desc: lint project
@@ -40,8 +37,7 @@ tasks:
 
   lint-ui:
     desc: lint ui
-    dir: ui/
-    cmds: [ npm -s run lint ]
+    cmds: [ build/run.sh 'lint-ui' ui/ npm run lint ]
 
   test:
     desc: run tests
@@ -56,15 +52,14 @@ tasks:
 
   unit-test-ui:
     desc: run ui unit-tests
-    dir: ui/
-    cmds: [ npm run test ]
+    cmds: [ build/run.sh 'unit-test-ui' ui/ npm run test ]
 
   component-test-ui:
     desc: run ui component-tests
     deps: [ start-ui ]
     dir: ui/
     cmds:
-      - npm run component-test
+      - ../build/run.sh 'component-test-ui' ./ npm run component-test
       - task: stop-ui
 
   start-ui:
