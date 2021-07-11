@@ -6,7 +6,7 @@ REPOSITORY="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )/../"
 
 cd "$REPOSITORY"
 
-COMMANDS='curl go lsof mktemp node npm screen'
+COMMANDS='curl docker go lsof mktemp mysql node npm screen'
 NODE_VERSION='v14.'
 GO_VERSION='go1.16.'
 PROJECT_COMMANDS='tools/bin/golangci-lint'
@@ -38,7 +38,12 @@ require_go_version() {
   go version | grep "$GO_VERSION" &> /dev/null || die "please install node with version $GO_VERSION"
 }
 
+require_docker_running() {
+  docker version &> /dev/null || die 'please install/start docker'
+}
+
 require_commands
 require_project_commands
 require_node_version
 require_go_version
+require_docker_running
