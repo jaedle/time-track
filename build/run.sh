@@ -31,3 +31,4 @@ fi
 echo 'failed'
 echo
 cat "$OUTPUT"
+exit "$EXIT_CODE"

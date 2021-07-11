@@ -5,7 +5,12 @@ silent: true
 tasks:
   install:
     desc: install dependencies
-    cmds: [ task: install-ui ]
+    cmds: [ task: install-tools, task: install-ui ]
+
+  install-tools:
+    desc: install required tools
+    cmds:
+      - build/run.sh 'install-golangci-lint' tools/ ./install-golangci-lint.sh
 
   install-ui:
     desc: install ui
@@ -14,13 +19,13 @@ tasks:
   world:
     desc: run all validation steps
     cmds:
-      - task: assert-validate-preconditions
+      - task: validate-preconditions
       - task: format
       - task: lint
       - task: test
 
-  assert-validate-preconditions:
-    desc: require validation preconditions
+  validate-preconditions:
+    desc: validate preconditions
     cmds: [ build/run.sh 'validate-preconditions' build/ ./validate-preconditions.sh ]
 
   format:
@@ -31,6 +36,10 @@ tasks:
     desc: format ui
     cmds: [ build/run.sh 'format-ui' ui/ npm run format ]
 
+  format-service:
+    desc: format service
+    cmds: [ build/run.sh 'format-service' service/ go fmt ./... ]
+
   lint:
     desc: lint project
     cmds: [ task: lint-ui ]
@@ -39,9 +48,13 @@ tasks:
     desc: lint ui
     cmds: [ build/run.sh 'lint-ui' ui/ npm run lint ]
 
+  lint-service:
+    desc: lint service
+    cmds: [ build/run.sh 'lint-service' service/ ../tools/bin/golangci-lint run ]
+
   test:
     desc: run tests
-    cmds: [ task: test-ui ]
+    cmds: [ task: test-ui, task: test-service ]
 
   test-ui:
     desc: run ui tests
@@ -73,6 +86,10 @@ tasks:
   stop-ui:
     desc: locally stop ui
     cmds: [ '(! lsof -ti tcp:4200 &> /dev/null) || kill -9 $(lsof -ti tcp:4200) &> /dev/null || true' ]
+
+  test-service:
+    desc: run tests for service
+    cmds: [ build/run.sh 'test-service' service/ go test ./... ]
 
   default:
     cmds: [ task: world ]
