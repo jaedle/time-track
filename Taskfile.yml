@@ -40,7 +40,34 @@ tasks:
   test-ui:
     desc: run ui tests
     dir: ui/
-    cmds: [ npm -s run test ]
+    cmds:
+      - task: unit-test-ui
+      - task: component-test-ui
+
+  unit-test-ui:
+    desc: run ui unit-tests
+    dir: ui/
+    cmds: [ npm run test ]
+
+  component-test-ui:
+    desc: run ui component-tests
+    deps: [ start-ui ]
+    dir: ui/
+    cmds:
+      - npm run component-test
+      - task: stop-ui
+
+  start-ui:
+    desc: locally start ui
+    deps: [ stop-ui ]
+    dir: ui/
+    cmds:
+      - screen -dmS ui npm run start
+      - ./wait-healthy.sh
+
+  stop-ui:
+    desc: locally stop ui
+    cmds: [ '(! lsof -ti tcp:4200 &> /dev/null) || kill -9 $(lsof -ti tcp:4200) &> /dev/null || true' ]
 
   default:
     cmds: [ task: world ]

@@ -7,7 +7,9 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "eslint \"**/*.{ts,tsx}\" "
+    "lint": "eslint \"**/*.{ts,tsx}\" ",
+    "component-test": "testcafe",
+    "component-test:live": "testcafe chrome --live"
   },
   "private": true,
   "dependencies": {
@@ -38,6 +40,7 @@
     "karma-coverage": "~2.0.3",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
+    "testcafe": "^1.15.0",
     "typescript": "~4.3.2"
   }
 }
