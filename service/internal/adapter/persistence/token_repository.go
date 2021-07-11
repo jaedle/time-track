@@ -51,17 +51,14 @@ func (r *TokenRepository) FindForUser(userId string) ([]model.Token, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer func() { _ = query.Close() }()
 
 	var result []model.Token
-
 	for query.Next() {
 		token := model.Token{}
-
-		err := query.Scan(&token.UserId, &token.Token)
-		if err != nil {
+		if err := query.Scan(&token.UserId, &token.Token); err != nil {
 			return nil, err
 		}
-
 		result = append(result, token)
 	}
 
