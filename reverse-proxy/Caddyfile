@@ -1,0 +1,19 @@
+{
+    admin off
+    http_port 3000
+    https_port 8443
+}
+
+http://localhost {
+    route /health {
+        respond "ok"
+    }
+
+    route /api* {
+        reverse_proxy http://localhost:8080
+    }
+
+    route /* {
+        reverse_proxy http://localhost:4200
+    }
+}
