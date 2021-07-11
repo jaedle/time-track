@@ -4,7 +4,7 @@ set -eu -o pipefail
 
 REVERSE_PROXY_DIR="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
-get_xcaddy() {
+install() {
   go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
 }
 
@@ -18,6 +18,6 @@ build() {
     --output "$REVERSE_PROXY_DIR/bin/caddy"
 }
 
-
+install
 clean
 build
