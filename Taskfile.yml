@@ -3,8 +3,38 @@ version: '3'
 silent: true
 
 tasks:
+  install:
+    desc: install dependencies
+    cmds: [ task: install-ui ]
+
+  install-ui:
+    desc: lint ui
+    dir: ui/
+    cmds: [ npm ci ]
+
   world:
-    cmds: [ echo 'hello world' ]
+    desc: run all validation steps
+    cmds:
+      - task: lint
+      - task: test
+
+  lint:
+    desc: lint project
+    cmds: [ task: lint-ui ]
+
+  lint-ui:
+    desc: lint ui
+    dir: ui/
+    cmds: [ npm -s run lint ]
+
+  test:
+    desc: run tests
+    cmds: [ task: test-ui ]
+
+  test-ui:
+    desc: run ui tests
+    dir: ui/
+    cmds: [ npm -s run test ]
 
   default:
     cmds: [ task: world ]
