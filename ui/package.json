@@ -9,7 +9,8 @@
     "test": "ng test",
     "lint": "eslint \"**/*.{ts,tsx}\" ",
     "component-test": "testcafe",
-    "component-test:live": "testcafe chrome --live"
+    "component-test:live": "testcafe chrome --live",
+    "format": "npx prettier --write ."
   },
   "private": true,
   "dependencies": {
@@ -40,6 +41,7 @@
     "karma-coverage": "~2.0.3",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
+    "prettier": "^2.3.2",
     "testcafe": "^1.15.0",
     "typescript": "~4.3.2"
   }

@@ -16,6 +16,7 @@ tasks:
     desc: run all validation steps
     cmds:
       - task: assert-validate-preconditions
+      - task: format
       - task: lint
       - task: test
 
@@ -23,6 +24,15 @@ tasks:
     desc: require validation preconditions
     dir: build/
     cmds: [ ./validate-preconditions.sh ]
+
+  format:
+    desc: format source-code
+    cmds: [ task: format-ui ]
+
+  format-ui:
+    desc: format ui
+    dir: ui/
+    cmds: [ npm run format ]
 
   lint:
     desc: lint project
