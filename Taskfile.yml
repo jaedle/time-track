@@ -9,7 +9,7 @@ tasks:
 
   install-ui:
     desc: install ui
-    cmds: [ build/run.sh 'install-ui' ui/ npm run lint ]
+    cmds: [ build/run.sh 'install-ui' ui/ npm ci ]
 
   world:
     desc: run all validation steps
