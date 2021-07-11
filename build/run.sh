@@ -18,13 +18,16 @@ cd "$DIR"
 shift
 shift
 
+START_TIME="$SECONDS"
 set +e
 "$@" &> "$OUTPUT"
 EXIT_CODE="$?"
 set -e
 
+ELAPSED_TIME=$((SECONDS - START_TIME))
+
 if [[ "$EXIT_CODE" -eq 0 ]]; then
-  echo 'success'
+  echo "success [${ELAPSED_TIME}s]"
   exit 0
 fi
 
