@@ -29,7 +29,6 @@ tasks:
       - task: lint
       - task: test
       - task: test-local-startup
-      - task: stop
 
   start-dependencies:
     desc: starting development dependencies
