@@ -11,12 +11,18 @@ import (
 
 const localDataSource = "root:password@tcp(localhost:3307)/database"
 
+const aTokenId = "d96cacde-f82f-401f-bdf3-a29fc2624582"
+const anotherTokenId = "0fb1b3e3-9c41-45fc-b11e-6b2fc19a04af"
+const yetAnotherTokenId = "2011697f-2807-4e45-9f06-f50c663e567c"
+
 const anUserId = "a-user"
 const anUserToken = "token-1"
 const anUserAnotherToken = "token-2"
 
 const anotherUserId = "another-user"
 const anotherUserToken = "another-token"
+
+const anUserIdWithNoTokens = "missing-user"
 
 
 var _ = Describe("TokenRepository", func() {
@@ -47,17 +53,20 @@ var _ = Describe("TokenRepository", func() {
 
 	It("persists tokens", func() {
 		err := repo.Insert(model.Token{
+			Id:     aTokenId,
 			UserId: anUserId,
 			Token:  anUserToken,
 		})
 		Expect(err).NotTo(HaveOccurred())
 		err = repo.Insert(model.Token{
+			Id:     anotherTokenId,
 			UserId: anUserId,
 			Token:  anUserAnotherToken,
 		})
 		Expect(err).NotTo(HaveOccurred())
 
 		err = repo.Insert(model.Token{
+			Id:     yetAnotherTokenId,
 			UserId: anotherUserId,
 			Token:  anotherUserToken,
 		})
@@ -66,10 +75,12 @@ var _ = Describe("TokenRepository", func() {
 		Expect(repo.Size()).To(Equal(3))
 		Expect(repo.FindForUser(anUserId)).To(ConsistOf(
 			model.Token{
+				Id:     aTokenId,
 				UserId: anUserId,
 				Token:  anUserToken,
 			},
 			model.Token{
+				Id:     anotherTokenId,
 				UserId: anUserId,
 				Token:  anUserAnotherToken,
 			},
@@ -77,12 +88,13 @@ var _ = Describe("TokenRepository", func() {
 
 		Expect(repo.FindForUser(anotherUserId)).To(ConsistOf(
 			model.Token{
+				Id:     yetAnotherTokenId,
 				UserId: anotherUserId,
 				Token:  anotherUserToken,
 			},
 		))
 
-		Expect(repo.FindForUser("missing-user")).To(BeEmpty())
+		Expect(repo.FindForUser(anUserIdWithNoTokens)).To(BeEmpty())
 	})
 
 })

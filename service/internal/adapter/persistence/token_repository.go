@@ -14,6 +14,7 @@ func NewTokenRepository(db *sql.DB) *TokenRepository {
 }
 
 const createTableStatement = `CREATE TABLE tokens (
+    id binary(16),
     userId varchar(255),
     token varchar(255)
 );`
@@ -24,7 +25,7 @@ func (r *TokenRepository) Init() error {
 }
 
 func (r *TokenRepository) Insert(token model.Token) error {
-	_, err := r.db.Exec(`INSERT INTO tokens (userId, token) VALUES (?, ?)`, token.UserId, token.Token)
+	_, err := r.db.Exec(`INSERT INTO tokens (id, userId, token) VALUES (UUID_TO_BIN(?), ?, ?)`, token.Id, token.UserId, token.Token)
 	return err
 }
 
@@ -47,7 +48,7 @@ func (r *TokenRepository) Size() (int, error) {
 }
 
 func (r *TokenRepository) FindForUser(userId string) ([]model.Token, error) {
-	query, err := r.db.Query("SELECT userId, token FROM tokens WHERE userId = ?", userId)
+	query, err := r.db.Query("SELECT BIN_TO_UUID(id), userId, token FROM tokens WHERE userId = ?", userId)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +57,7 @@ func (r *TokenRepository) FindForUser(userId string) ([]model.Token, error) {
 	var result []model.Token
 	for query.Next() {
 		token := model.Token{}
-		if err := query.Scan(&token.UserId, &token.Token); err != nil {
+		if err := query.Scan(&token.Id, &token.UserId, &token.Token); err != nil {
 			return nil, err
 		}
 		result = append(result, token)
