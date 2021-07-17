@@ -9,13 +9,23 @@ import (
 	"github.com/jaedle/time-track/service/internal/adapter/persistence"
 )
 
+const localDataSource = "root:password@tcp(localhost:3307)/database"
+
+const anUserId = "a-user"
+const anUserToken = "token-1"
+const anUserAnotherToken = "token-2"
+
+const anotherUserId = "another-user"
+const anotherUserToken = "another-token"
+
+
 var _ = Describe("TokenRepository", func() {
 	var database *sql.DB
 	var repo *persistence.TokenRepository
 
 	BeforeEach(func() {
 		var err error
-		database, err = persistence.NewDatabase("root:password@tcp(localhost:3307)/database")
+		database, err = persistence.NewDatabase(localDataSource)
 		Expect(err).NotTo(HaveOccurred())
 		Expect(database.Ping()).NotTo(HaveOccurred())
 
@@ -37,38 +47,38 @@ var _ = Describe("TokenRepository", func() {
 
 	It("persists tokens", func() {
 		err := repo.Insert(model.Token{
-			UserId: "a-user",
-			Token:  "token-1",
+			UserId: anUserId,
+			Token:  anUserToken,
 		})
 		Expect(err).NotTo(HaveOccurred())
 		err = repo.Insert(model.Token{
-			UserId: "a-user",
-			Token:  "token-2",
+			UserId: anUserId,
+			Token:  anUserAnotherToken,
 		})
 		Expect(err).NotTo(HaveOccurred())
 
 		err = repo.Insert(model.Token{
-			UserId: "another-user",
-			Token:  "another-token",
+			UserId: anotherUserId,
+			Token:  anotherUserToken,
 		})
 		Expect(err).NotTo(HaveOccurred())
 
 		Expect(repo.Size()).To(Equal(3))
-		Expect(repo.FindForUser("a-user")).To(ConsistOf(
+		Expect(repo.FindForUser(anUserId)).To(ConsistOf(
 			model.Token{
-				UserId: "a-user",
-				Token:  "token-1",
+				UserId: anUserId,
+				Token:  anUserToken,
 			},
 			model.Token{
-				UserId: "a-user",
-				Token:  "token-2",
+				UserId: anUserId,
+				Token:  anUserAnotherToken,
 			},
 		))
 
-		Expect(repo.FindForUser("another-user")).To(ConsistOf(
+		Expect(repo.FindForUser(anotherUserId)).To(ConsistOf(
 			model.Token{
-				UserId: "another-user",
-				Token:  "another-token",
+				UserId: anotherUserId,
+				Token:  anotherUserToken,
 			},
 		))
 
