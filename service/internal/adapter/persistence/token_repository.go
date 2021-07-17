@@ -14,7 +14,7 @@ func NewTokenRepository(db *sql.DB) *TokenRepository {
 }
 
 const createTableStatement = `CREATE TABLE tokens (
-    id binary(16),
+    id binary(16) primary key,
     userId varchar(255),
     token varchar(255)
 );`
@@ -64,4 +64,9 @@ func (r *TokenRepository) FindForUser(userId string) ([]model.Token, error) {
 	}
 
 	return result, nil
+}
+
+func (r *TokenRepository) Delete(id string) error {
+	_, err := r.db.Exec(`DELETE FROM tokens WHERE id = UUID_TO_BIN(?)`, id)
+	return err
 }

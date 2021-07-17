@@ -97,4 +97,61 @@ var _ = Describe("TokenRepository", func() {
 		Expect(repo.FindForUser(anUserIdWithNoTokens)).To(BeEmpty())
 	})
 
+	It("requires a unique token id", func() {
+		Expect(repo.Insert(model.Token{
+			Id:     aTokenId,
+			UserId: anUserId,
+			Token:  anUserToken,
+		})).NotTo(HaveOccurred())
+
+		err := repo.Insert(model.Token{
+			Id:     aTokenId,
+			UserId: anUserId,
+			Token:  anUserToken,
+		})
+
+		Expect(err).To(HaveOccurred())
+		Expect(repo.Size()).To(Equal(1))
+	})
+
+
+	It("deletes token by id", func() {
+		err := repo.Insert(model.Token{
+			Id:     aTokenId,
+			UserId: anUserId,
+			Token:  anUserToken,
+		})
+		Expect(err).NotTo(HaveOccurred())
+		err = repo.Insert(model.Token{
+			Id:     anotherTokenId,
+			UserId: anUserId,
+			Token:  anUserAnotherToken,
+		})
+		Expect(err).NotTo(HaveOccurred())
+
+		err = repo.Insert(model.Token{
+			Id:     yetAnotherTokenId,
+			UserId: anotherUserId,
+			Token:  anotherUserToken,
+		})
+		Expect(err).NotTo(HaveOccurred())
+
+
+		err = repo.Delete(aTokenId)
+
+
+		Expect(err).To(Not(HaveOccurred()))
+		Expect(repo.Size()).To(Equal(2))
+
+		Expect(repo.FindForUser(anUserId)).To(ConsistOf(model.Token{
+			Id:     anotherTokenId,
+			UserId: anUserId,
+			Token:  anUserAnotherToken,
+		}))
+		Expect(repo.FindForUser(anotherUserId)).To(ConsistOf(model.Token{
+			Id:     yetAnotherTokenId,
+			UserId: anotherUserId,
+			Token:  anotherUserToken,
+		}))
+	})
 })
